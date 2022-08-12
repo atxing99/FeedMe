@@ -158,11 +158,14 @@ function addOrder(food: IFood) {
   orders.value.push(order);
   const freeBot = bots.value.filter((bot: IBot) => bot.orderId === null)[0];
   //   botGetTask(freeBot.id);
-  freeBot.orderId = order.id;
-  order.botId = freeBot.id;
+  if (freeBot != null) {
+    freeBot.orderId = order.id;
+    order.botId = freeBot.id;
+  }
   setTimeout(() => {
     order.isCompleted = true;
     freeBot.orderId = null;
+    order.botId = null;
     botGetTask(freeBot.id);
   }, 10000);
 }
