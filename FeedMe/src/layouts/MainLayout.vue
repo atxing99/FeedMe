@@ -102,7 +102,6 @@ interface IOrder {
   isVIP: boolean;
   isCompleted: boolean;
   orderStatus: string;
-  interval: number;
 }
 
 var orderId = 1;
@@ -115,20 +114,11 @@ function addOrder(food: IFood) {
     orderName: food.foodName,
     isVIP: false,
     isCompleted: false,
-    orderStatus: 'Pending',
-    interval: 10
+    orderStatus: 'Pending'
   };
   orderId++;
   orders.value.push(order);
 }
-
-let timer = setInterval((order: IOrder) => {
-  if (order.interval <= 0) {
-    order.orderStatus = 'Completed';
-    clearInterval(timer);
-  }
-  order.interval--;
-}, 1000);
 
 const pendingOrders = computed(() => {
   return orders.value.filter(
@@ -141,8 +131,4 @@ const completedOrders = computed(() => {
     (order: IOrder) => order.orderStatus === 'Completed'
   );
 });
-
-// const pendingOrders = computed((orders: IOrder) => {
-//   return orders;
-// });
 </script>
