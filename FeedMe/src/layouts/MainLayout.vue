@@ -65,8 +65,10 @@
                   </q-card-section>
 
                   <q-card-actions vertical align="center">
-                    <div>{{ bot.orderId }}</div>
-                    <q-badge rounded color="red" label="1" />
+                    <div>
+                      {{ bot.orderId }}
+                      <q-badge rounded color="red" label="1" />
+                    </div>
                   </q-card-actions>
                 </q-card>
               </div>
@@ -134,11 +136,11 @@ interface IBot {
   orderId: number | null;
 }
 
-const bots: IBot[] = [
+const bots = ref<IBot[]>([
   { id: 1, orderId: null },
   { id: 2, orderId: null },
   { id: 3, orderId: null }
-];
+]);
 
 var orderId = 1;
 //const pendingOrders = ref<IOrder[]>([]);
@@ -154,6 +156,29 @@ function addOrder(food: IFood) {
   };
   orderId++;
   orders.value.push(order);
+  const freeBot = bots.value.filter((bot: IBot) => bot.orderId === null)[0];
+  //   botGetTask(freeBot.id);
+  freeBot.orderId = order.id;
+  order.botId = freeBot.id;
+  setTimeout(() => {
+    order.isCompleted = true;
+    freeBot.orderId = null;
+    botGetTask(freeBot.id);
+  }, 10000);
+}
+
+function botGetTask(botId: number) {
+  let order: IOrder = pendingOrders.value.filter(
+    (order: IOrder) => order.isVIP === true
+  )[0];
+  if (order === null) {
+    order = pendingOrders.value[0];
+  }
+  setTimeout(() => {
+    order.isCompleted = true;
+    const bot: IBot = bots.value.find((x) => x.id == botId)!;
+    bot.orderId = order.id;
+  }, 10000);
 }
 
 const pendingOrders = computed(() => {
