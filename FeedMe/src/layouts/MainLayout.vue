@@ -82,6 +82,11 @@
 import { computed, ref } from 'vue';
 //import OrderStatus from '../types/OrderStatus';
 
+interface IBot {
+  id: number;
+  orderId: number;
+}
+
 // --------- Food Menu ---------
 interface IFood {
   id: number;
@@ -101,8 +106,7 @@ interface IOrder {
   orderName: string;
   isVIP: boolean;
   isCompleted: boolean;
-  orderStatus: string;
-  interval: number;
+  botId: number;
 }
 
 var orderId = 1;
@@ -115,31 +119,18 @@ function addOrder(food: IFood) {
     orderName: food.foodName,
     isVIP: false,
     isCompleted: false,
-    orderStatus: 'Pending',
-    interval: 10
+    botId: 1
   };
   orderId++;
   orders.value.push(order);
 }
 
-let timer = setInterval((order: IOrder) => {
-  if (order.interval <= 0) {
-    order.orderStatus = 'Completed';
-    clearInterval(timer);
-  }
-  order.interval--;
-}, 1000);
-
 const pendingOrders = computed(() => {
-  return orders.value.filter(
-    (order: IOrder) => order.orderStatus === 'Pending'
-  );
+  return orders.value.filter((order: IOrder) => order.isCompleted === false);
 });
 
 const completedOrders = computed(() => {
-  return orders.value.filter(
-    (order: IOrder) => order.orderStatus === 'Completed'
-  );
+  return orders.value.filter((order: IOrder) => order.isCompleted === true);
 });
 
 // const pendingOrders = computed((orders: IOrder) => {
