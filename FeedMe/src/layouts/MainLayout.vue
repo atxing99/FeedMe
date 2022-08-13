@@ -43,36 +43,63 @@
       <router-view />
     </q-page-container> -->
     <q-page-container>
-      <div class="window-height">
-        <div class="row">
-          <div class="col text-center" v-for="food in foods" :key="food.id">
-            <button @click="addOrder(food)" class="q-px-md">
-              {{ food.foodName }}
-            </button>
+      <q-page padding>
+        <div class="window-height">
+          <div class="meal-wrapper">
+            <h5 class="q-ml-md q-mb-md">Select your meal:</h5>
+            <div class="row">
+              <div class="q-mx-md" v-for="food in foods" :key="food.id">
+                <q-btn color="brown" @click="addOrder(food)" class="q-px-md">
+                  {{ food.foodName }}
+                </q-btn>
+              </div>
+            </div>
+          </div>
+          <div class="bot-wrapper q-mt-md">
+            <div class="row">
+              <div class="col" v-for="bot in bots" :key="bot.id">
+                <q-card class="my-card q-mx-md">
+                  <q-card-section class="bg-grey-8 text-white">
+                    <div class="text-h6">Bot {{ bot.id }}</div>
+                    <!-- <div class="text-subtitle2">{{ bot.id }}</div> -->
+                  </q-card-section>
+
+                  <q-card-actions vertical align="center">
+                    <div>
+                      {{ bot.orderId }}
+                      <q-badge rounded color="red" label="1" />
+                    </div>
+                  </q-card-actions>
+                </q-card>
+              </div>
+            </div>
+          </div>
+          <div class="row q-py-md">
+            <div class="col text-center">
+              <div>Pending</div>
+              <ul class="pending-orders">
+                <li
+                  v-for="pendingOrder in pendingOrders"
+                  :key="pendingOrder.id"
+                >
+                  {{ pendingOrder.orderName }}
+                </li>
+              </ul>
+            </div>
+            <div class="col text-center">
+              <div>Completed</div>
+              <ul class="completed-orders">
+                <li
+                  v-for="completedOrder in completedOrders"
+                  :key="completedOrder.id"
+                >
+                  {{ completedOrder.orderName }}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-        <div class="row q-py-md">
-          <div class="col text-center">
-            <div>Pending</div>
-            <ul class="pending-orders">
-              <li v-for="pendingOrder in pendingOrders" :key="pendingOrder.id">
-                {{ pendingOrder.orderName }}
-              </li>
-            </ul>
-          </div>
-          <div class="col text-center">
-            <div>Completed</div>
-            <ul class="completed-orders">
-              <li
-                v-for="completedOrder in completedOrders"
-                :key="completedOrder.id"
-              >
-                {{ completedOrder.orderName }}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
@@ -106,8 +133,19 @@ interface IOrder {
   orderName: string;
   isVIP: boolean;
   isCompleted: boolean;
-  botId: number;
+  botId: number | null;
 }
+
+interface IBot {
+  id: number;
+  orderId: number | null;
+}
+
+const bots = ref<IBot[]>([
+  { id: 1, orderId: null },
+  { id: 2, orderId: null },
+  { id: 3, orderId: null }
+]);
 
 var orderId = 1;
 //const pendingOrders = ref<IOrder[]>([]);
@@ -119,10 +157,36 @@ function addOrder(food: IFood) {
     orderName: food.foodName,
     isVIP: false,
     isCompleted: false,
-    botId: 1
+    botId: null
   };
   orderId++;
   orders.value.push(order);
+  const freeBot = bots.value.filter((bot: IBot) => bot.orderId === null)[0];
+  //   botGetTask(freeBot.id);
+  if (freeBot != null) {
+    freeBot.orderId = order.id;
+    order.botId = freeBot.id;
+  }
+  setTimeout(() => {
+    order.isCompleted = true;
+    freeBot.orderId = null;
+    order.botId = null;
+    botGetTask(freeBot.id);
+  }, 10000);
+}
+
+function botGetTask(botId: number) {
+  let order: IOrder = pendingOrders.value.filter(
+    (order: IOrder) => order.isVIP === true
+  )[0];
+  if (order === null) {
+    order = pendingOrders.value[0];
+  }
+  setTimeout(() => {
+    order.isCompleted = true;
+    const bot: IBot = bots.value.find((x) => x.id == botId)!;
+    bot.orderId = order.id;
+  }, 10000);
 }
 
 const pendingOrders = computed(() => {
@@ -132,8 +196,4 @@ const pendingOrders = computed(() => {
 const completedOrders = computed(() => {
   return orders.value.filter((order: IOrder) => order.isCompleted === true);
 });
-
-// const pendingOrders = computed((orders: IOrder) => {
-//   return orders;
-// });
 </script>
