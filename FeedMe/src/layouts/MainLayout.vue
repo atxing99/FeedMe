@@ -56,13 +56,13 @@ function addBot() {
   bots.value.push(bot);
   botGetTask(bot);
 }
+
 function removeBot() {
   let removedBot = bots.value.pop();
-
   if (removedBot?.orderId) {
-    var selectedOrder = orders.value.find((order) => {
-      order.id === removedBot?.orderId;
-    });
+    var selectedOrder = orders.value.find(
+      (order) => order.id === removedBot?.orderId
+    );
     if (selectedOrder) {
       selectedOrder.botId = null;
       removedBot.orderId = null;
@@ -90,21 +90,19 @@ function addOrder(isVIP = false) {
 }
 
 function botGetTask(bot: Bot) {
-  const freePendingOrder: Order = orders.value.filter(
-    (order) => order.botId === null
-  )[0];
+  const freePendingOrder: Order = orders.value
+    .filter((order) => order.botId === null)
+    .sort((orderA, orderB) => Number(orderB.isVIP) - Number(orderA.isVIP))[0];
 
   if (freePendingOrder) {
     freePendingOrder.botId = bot.id;
     bot.orderId = freePendingOrder.id;
     bot.timer = setTimeout(() => {
-      console.log('setTimeout');
       freePendingOrder.isCompleted = true;
       bot.orderId = null;
       botGetTask(bot);
     }, 5000);
   }
-  console.log('completedOrders.value', completedOrders.value);
 }
 </script>
 
@@ -204,7 +202,7 @@ function botGetTask(bot: Bot) {
                 <tr v-for="(order, index) in completedOrders" :key="order.id">
                   <td>{{ order.id }}</td>
                   <td>{{ order.isVIP ? 'VIP' : 'Normal Member' }}</td>
-                  <td>Pending</td>
+                  <td>Completed</td>
                   <td>1</td>
                   <td>{{ index + 1 }}</td>
                 </tr>
