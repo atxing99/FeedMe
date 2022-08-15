@@ -143,11 +143,14 @@ function botGetTask(bot: Bot) {
           <div class="text-h6">Processing</div>
         </q-card-section>
 
-        <div class="row bg-blue">
+        <div class="row">
           <div v-for="bot in bots" :key="bot.id" class="col-4 q-pa-sm">
             <div class="q-ma-sm q-pa-md" style="border: 1px solid black">
               <div>Robot ID: {{ bot.id }}</div>
-              <div>Order ID: {{ bot.orderId }}</div>
+              <div>
+                Order ID:
+                {{ bot.orderId == null ? 'Pending Task' : bot.orderId }}
+              </div>
               <div>Status: ToDo</div>
             </div>
           </div>
