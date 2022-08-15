@@ -175,7 +175,9 @@ function botGetTask(bot: Bot) {
                 <tr v-for="(order, index) in pendingOrders" :key="order.id">
                   <td>{{ order.id }}</td>
                   <td>{{ order.isVIP ? 'VIP' : 'Normal Member' }}</td>
-                  <td :class="{ processing: order.botId != null }">Pending</td>
+                  <td :class="{ processing: order.botId != null }">
+                    {{ order.botId === null ? 'Pending' : 'Processing' }}
+                  </td>
                   <td>1</td>
                   <td>{{ index + 1 }}</td>
                 </tr>
