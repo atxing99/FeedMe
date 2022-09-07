@@ -101,7 +101,7 @@ function botGetTask(bot: Bot) {
       freePendingOrder.isCompleted = true;
       bot.orderId = null;
       botGetTask(bot);
-    }, 5000);
+    }, 10000);
   }
 }
 </script>
