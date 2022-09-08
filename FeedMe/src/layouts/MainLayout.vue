@@ -51,9 +51,7 @@ function removeBot() {
       selectedOrder.botId = null;
       removedBot.orderId = null;
 
-      console.log('before clearTimeout', removedBot.timer);
       clearTimeout(removedBot.timer);
-      console.log('after clearTimeout', removedBot.timer);
     }
   }
 }
@@ -93,7 +91,7 @@ function botGetOrder(bot: Bot) {
 <template>
   <div class="column window-height bg-grey">
     <div class="col-shrink">
-      <div class="text-h5 text-center q-pa-md">Add Robot/Add order</div>
+      <div class="text-h5 text-center q-pa-md">FeedMe</div>
       <div class="row">
         <div class="col q-pa-md">
           <q-card class="my-card">
