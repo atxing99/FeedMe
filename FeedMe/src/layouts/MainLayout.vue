@@ -169,7 +169,7 @@ function botGetOrder(bot: Bot) {
                         : 'Processing in Bot ' + order.botId
                     }}
                   </td>
-                  <td>{{ timer }}</td>
+                  <td>1</td>
                   <td>{{ index + 1 }}</td>
                 </tr>
               </table>
@@ -190,7 +190,6 @@ function botGetOrder(bot: Bot) {
                   <td>Status</td>
                   <td>Queue</td>
                 </tr>
-
                 <tr v-for="(order, index) in completedOrders" :key="order.id">
                   <td>{{ order.id }}</td>
                   <td>{{ order.isVIP ? 'VIP Order' : 'Normal Order' }}</td>
