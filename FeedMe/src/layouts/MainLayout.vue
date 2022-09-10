@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import YoutubeVideo from 'src/components/youtubeVideo.vue';
 
 interface Order {
   id: number;
@@ -13,6 +14,46 @@ interface Bot {
   orderId: number | null;
   timer?: NodeJS.Timeout;
 }
+
+interface IYoutubeBox {
+  link: string;
+  title: string;
+}
+
+const youtubeBoxes: IYoutubeBox[] = [
+  {
+    link: 'https://www.youtube.com/embed/rivk3p5Ps6Q',
+    title: 'THE BLACKFAST'
+  },
+  {
+    link: 'https://www.youtube.com/embed/rivk3p5Ps6Q',
+    title: 'THE BLACKFAST'
+  },
+  {
+    link: 'https://www.youtube.com/embed/rivk3p5Ps6Q',
+    title: 'THE BLACKFAST'
+  },
+  {
+    link: 'https://www.youtube.com/embed/rivk3p5Ps6Q',
+    title: 'THE BLACKFAST'
+  },
+  {
+    link: 'https://www.youtube.com/embed/rivk3p5Ps6Q',
+    title: 'THE BLACKFAST'
+  },
+  {
+    link: 'https://www.youtube.com/embed/rivk3p5Ps6Q',
+    title: 'THE BLACKFAST'
+  },
+  {
+    link: 'https://www.youtube.com/embed/rivk3p5Ps6Q',
+    title: 'THE BLACKFAST'
+  },
+  {
+    link: 'https://www.youtube.com/embed/rivk3p5Ps6Q',
+    title: 'THE BLACKFAST'
+  }
+];
 
 let botIndex = 1;
 let orderIndex = 1;
@@ -89,7 +130,17 @@ function botGetOrder(bot: Bot) {
 </script>
 
 <template>
-  <div class="column window-height bg-grey">
+  <div class="row">
+    <div
+      class="col-md-3"
+      v-for="(youtubeBox, index) in youtubeBoxes"
+      :key="index"
+    >
+      <youtube-video :link="youtubeBox.link" :title="youtubeBox.title" />
+    </div>
+  </div>
+
+  <div class="column window-height bg-grey hidden">
     <div class="col-shrink">
       <div class="text-h5 text-center q-pa-md">FeedMe</div>
       <div class="row">
